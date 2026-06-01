@@ -1,0 +1,17 @@
+.money-card{
+    margin-top: 200px;
+    text-align: center;
+    justify-content: center;
+    position: relative;
+}
+.elementWhenPoor{
+    position: absolute;
+    border: 3px solid rgb(255, 255, 255);
+    width: 200px;
+    height: 50px;
+    align-items: center;
+    display: flex;
+   justify-content: center;
+  left: 650px;
+   bottom: 300px;
+}
