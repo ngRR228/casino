@@ -43,7 +43,8 @@ console.log('PASSWORD:', password)
 
     try{
         if(!username || !password){
-            return res.status(400).json({error:'fill the gaps'})
+            // return res.status(400).json({error:'fill the gaps'})
+            throw new Error('fill the gaps')
         }
         
             const hashed = await bcrypt.hash(password, 10)
@@ -62,13 +63,13 @@ console.log('PASSWORD:', password)
     }catch(e) {
           
 
-        // e.message === "Validation error" ? res.render('exists') : res.render('registration', {error: e.message})  
-// ========================  Error: Cannot find module 'ejs'  !!!!!!!!! check how to use react instead of ejs
+
             console.log(e.message);
-            // Throw e.message("user exists"). figure out how to throw a message to the web page
+            
            
             return res.status(400).json({error: e.message})
         }
+    });
 
 
 app.get('/login', (req, res) => {
@@ -94,13 +95,17 @@ app.post('/login', async (req, res) => {
         const user = await Users.findOne({where:{username:username}})
         
         if(!user){
-            return res.render('/login', {error:'invalid username or password'})
+            return res.status(401).json({
+                error:'invalid username or password'
+            })
         }
 
         const validPassword = await bcrypt.compare(password, user.password)
 
         if(!validPassword){
-            return res.render('/login',{error: 'invalid username or password'})
+            return res.status(401).json({
+                error: 'invalid username or password'
+            })
         }
 
         const token = jwt.sign({id:user.id}, SECRET_KEY, {expiresIn: '1h'})
@@ -117,9 +122,10 @@ app.post('/login', async (req, res) => {
 
         
     }catch(e){
-        return res.status(400).json({error: 'invalid username or password'})
+        return res.status(401).json({error: 'invalid username or password'})
     }
 
+});
 
 
         function checkAuth (req, res, next) {
@@ -128,7 +134,7 @@ app.post('/login', async (req, res) => {
             if(!token){
                
                 
-                res.redirect('/login')
+             return   res.redirect('/login')
             }   try{
                 const decoded = jwt.verify(token, SECRET_KEY)
 
@@ -150,13 +156,9 @@ app.post('/login', async (req, res) => {
 
 
     
-})
+
       
-    }
-
-
     
-)
 
 console.log('server is running');
 
